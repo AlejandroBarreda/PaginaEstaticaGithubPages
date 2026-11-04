@@ -177,6 +177,48 @@
     textarea { min-height: 110px; resize: vertical; }
     .form-note { font-size: 13px; color: rgba(255,255,255,.65); margin: 0; align-self: center; }
     @media (max-width: 640px) { form { grid-template-columns: 1fr; } }
+    .gform { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: 22px; padding: clamp(24px, 4vw, 40px); backdrop-filter: blur(10px); display: grid; gap: 16px; justify-items: start; }
+    .gform h3 { font-size: 26px; }
+    .gform p { margin: 0; color: rgba(255,255,255,.8); }
+    .gform-ico { width: 60px; height: 60px; border-radius: 18px; display: grid; place-items: center; background: rgba(245,184,46,.18); color: var(--sun); animation: bob 3.5s ease-in-out infinite; }
+    .gform-ico svg { width: 30px; height: 30px; }
+    @keyframes bob { 50% { transform: translateY(-6px) rotate(-4deg); } }
+    #gfEmbed:empty { display: none; }
+    #gfEmbed { width: 100%; }
+    #gfEmbed iframe { width: 100%; height: 760px; border: 0; border-radius: 14px; background: #fff; }
+
+    /* Galería bento */
+    .gallery { padding-top: 0; }
+    .bento { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-auto-rows: clamp(220px, 26vw, 320px); gap: 16px; }
+    .shot { position: relative; margin: 0; border-radius: 22px; overflow: hidden; cursor: zoom-in; box-shadow: var(--shadow); isolation: isolate; outline: none; }
+    .shot.tall { grid-row: span 2; }
+    .shot.wide { grid-column: span 2; }
+    .shot picture, .shot img { width: 100%; height: 100%; }
+    .shot img { object-fit: cover; transform: scale(1.12); transition: transform 1.4s cubic-bezier(.2,.8,.2,1), filter .6s; }
+    .bento.reveal { opacity: 1; transform: none; }
+    .shot { clip-path: inset(0 0 100% 0 round 22px); transition: clip-path 1.2s cubic-bezier(.7,0,.2,1), box-shadow .3s; transition-delay: var(--d, 0s); }
+    .bento.in .shot { clip-path: inset(0 0 0 0 round 22px); }
+    .bento.in .shot img { transform: scale(1); }
+    .shot:hover img, .shot:focus-visible img { transform: scale(1.06); }
+    .shot::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(14,16,48,.78)); z-index: 1; pointer-events: none; }
+    .shot figcaption { position: absolute; left: 20px; right: 20px; bottom: 18px; z-index: 2; color: #fff; font-weight: 600; font-size: 17px; line-height: 1.35;
+      transform: translateY(6px); opacity: .92; transition: transform .5s, opacity .5s; }
+    .shot:hover figcaption { transform: none; opacity: 1; }
+    .shot:focus-visible { box-shadow: 0 0 0 3px var(--sun); }
+    .shot.tall::before { content: ""; position: absolute; top: 18px; left: 18px; width: 46px; height: 8px; border-radius: 4px; z-index: 2;
+      background: linear-gradient(90deg, var(--magenta) 0 33%, var(--sun) 33% 66%, var(--turq) 66%); }
+    @media (max-width: 760px) {
+      .bento { grid-template-columns: 1fr 1fr; grid-auto-rows: 200px; }
+      .shot.tall { grid-column: span 2; grid-row: span 2; }
+      .shot.wide { grid-column: span 2; }
+    }
+    .lightbox { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; align-content: center; gap: 14px; padding: 24px;
+      background: rgba(10,11,30,.9); backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity .35s; }
+    .lightbox.open { opacity: 1; pointer-events: auto; }
+    .lightbox img { max-width: min(1100px, 100%); max-height: 80vh; border-radius: 16px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.7); transform: scale(.94); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+    .lightbox.open img { transform: none; }
+    .lb-cap { color: #fff; margin: 0; text-align: center; font-weight: 500; }
+    .lb-close { position: absolute; top: 16px; right: 20px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.12); color: #fff; font-size: 28px; line-height: 1; cursor: pointer; }
 
     footer { padding: 40px 0; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
     footer .container { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -200,6 +242,7 @@
       </a>
       <ul>
         <li><a href="#programa" data-i18n="navProgram">Programa</a></li>
+        <li><a href="#galeria" data-i18n="navGallery">Galería</a></li>
         <li><a href="#roles" data-i18n="navRoles">Roles</a></li>
         <li><a href="#proceso" data-i18n="navProcess">Proceso</a></li>
         <li><a href="#faq" data-i18n="navFaq">Preguntas</a></li>
@@ -289,6 +332,41 @@
     </div>
   </section>
 
+  <!-- ============ GALERÍA ============ -->
+  <section id="galeria" class="gallery">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-i18n="galEyebrow">En imágenes</span>
+        <h2 data-i18n="galTitle">Así se vive una jornada</h2>
+        <p data-i18n="galText">Fotos reales de nuestras jornadas en comunidades de Guatemala.</p>
+      </div>
+      <div class="bento reveal">
+        <figure class="shot tall" style="--d:0s" tabindex="0" role="button">
+          <picture><source srcset="img/nino-juguete.webp" type="image/webp"><img src="img/nino-juguete.jpg" data-i18n-alt="g1" alt="" loading="lazy" decoding="async"></picture>
+          <figcaption data-i18n="g1"></figcaption>
+        </figure>
+        <figure class="shot wide" style="--d:0.1s" tabindex="0" role="button">
+          <picture><source srcset="img/sala-comunidad.webp" type="image/webp"><img src="img/sala-comunidad.jpg" data-i18n-alt="g2" alt="" loading="lazy" decoding="async"></picture>
+          <figcaption data-i18n="g2"></figcaption>
+        </figure>
+        <figure class="shot  reveal" style="--d:0.2s" tabindex="0" role="button">
+          <picture><source srcset="img/preparando-medicinas.webp" type="image/webp"><img src="img/preparando-medicinas.jpg" data-i18n-alt="g3" alt="" loading="lazy" decoding="async"></picture>
+          <figcaption data-i18n="g3"></figcaption>
+        </figure>
+        <figure class="shot  reveal" style="--d:0.3s" tabindex="0" role="button">
+          <picture><source srcset="img/farmacia-juguetes.webp" type="image/webp"><img src="img/farmacia-juguetes.jpg" data-i18n-alt="g4" alt="" loading="lazy" decoding="async"></picture>
+          <figcaption data-i18n="g4"></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lb-close" aria-label="Cerrar / Close">×</button>
+    <img alt="">
+    <p class="lb-cap"></p>
+  </div>
+
   <!-- ============ STATS ============ -->
   <section class="stats" aria-label="Datos">
     <div class="container stat-grid">
@@ -346,7 +424,7 @@
         </div>
         <div class="timeline" id="timeline">
           <span class="fill" id="tlfill"></span>
-          <div class="step reveal"><span class="num">1</span><h3 data-i18n="p1t">Aplica</h3><p data-i18n="p1d">Llena el formulario de esta página. Toma menos de 5 minutos.</p></div>
+          <div class="step reveal"><span class="num">1</span><h3 data-i18n="p1t">Aplica</h3><p data-i18n="p1d">Llena el formulario de solicitud. Toma menos de 5 minutos.</p></div>
           <div class="step reveal"><span class="num">2</span><h3 data-i18n="p2t">Entrevista</h3><p data-i18n="p2d">Una videollamada para conocer tu experiencia, disponibilidad y el rol ideal para ti.</p></div>
           <div class="step reveal"><span class="num">3</span><h3 data-i18n="p3t">Preparación</h3><p data-i18n="p3d">Orientación en línea, guía de viaje y seguridad, y lista de documentos necesarios.</p></div>
           <div class="step reveal"><span class="num">4</span><h3 data-i18n="p4t">¡A Guatemala!</h3><p data-i18n="p4d">Te recibimos en el punto de encuentro y viajamos juntos como equipo a la comunidad.</p></div>
@@ -391,24 +469,20 @@
         <p data-i18n="applyText">Cuéntanos sobre ti y te contactaremos con las próximas fechas de jornada.</p>
         <p style="margin-top:18px"><strong data-i18n="nextLabel">Próxima jornada:</strong> <span data-cfg="nextDates"></span> · <span data-cfg="location"></span></p>
       </div>
-      <form id="form" class="reveal" style="--d:.1s" novalidate>
-        <label><span data-i18n="fName">Nombre completo</span><input name="name" required autocomplete="name"></label>
-        <label><span data-i18n="fEmail">Correo electrónico</span><input name="email" type="email" required autocomplete="email"></label>
-        <label><span data-i18n="fCountry">País</span><input name="country" autocomplete="country-name"></label>
-        <label><span data-i18n="fRole">Rol de interés</span>
-          <select class="f" name="role" id="roleSel"></select>
-        </label>
-        <label class="full"><span data-i18n="fMsg">Cuéntanos tu experiencia y disponibilidad</span><textarea name="msg"></textarea></label>
-        <button class="btn" type="submit" style="--b: var(--sun); color: #1d1b2e"><span data-i18n="fSend">Enviar solicitud</span> <span aria-hidden="true">→</span></button>
-        <p class="form-note" data-i18n="fNote">Al enviar se abrirá tu aplicación de correo con la solicitud lista.</p>
-      </form>
+      <div class="gform reveal" style="--d:.1s">
+        <div class="gform-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></div>
+        <h3 data-i18n="gfTitle">Formulario de solicitud</h3>
+        <p data-i18n="gfText">Completa tus datos, el rol que te interesa y tu disponibilidad. Toma menos de 5 minutos.</p>
+        <a class="btn" id="gfBtn" target="_blank" rel="noopener" style="--b: var(--sun); color: #1d1b2e"><span data-i18n="fSend">Abrir formulario</span> <span aria-hidden="true">↗</span></a>
+        <p class="form-note" data-i18n="fNote">Se abre en Google Forms, en una pestaña nueva.</p>
+        <div id="gfEmbed"></div>
+      </div>
     </div>
   </section>
 
   <footer>
     <div class="container">
-      <span>© <span id="yr"></span> <span data-cfg="orgName"></span> · <a data-cfg-href="email" href="#"><span data-cfg="email"></span></a></span>
-      <span data-i18n="footer">Hecho con cariño en Guatemala 🇬🇹</span>
+      <span>© <span id="yr"></span> <span data-cfg="orgName"></span></span>
     </div>
   </footer>
 
@@ -418,10 +492,14 @@
      ===================================================================== */
   const CONFIG = {
     orgName:   "Jornadas Médicas Guatemala",
-    email:     "voluntarios@tu-dominio.org",
     nextDates: { es: "Fechas por confirmar", en: "Dates to be confirmed", pt: "Datas a confirmar" },
     location:  { es: "Guatemala", en: "Guatemala", pt: "Guatemala" },
-    stats:     { duration: 7, minAge: 18, languages: 3, goal: 1 }
+    stats:     { duration: 7, minAge: 18, languages: 3, goal: 1 },
+    // Formulario de solicitud (Google Forms)
+    formUrl:      "https://forms.gle/ZZTurvN9UaZqSW5z9",
+    // Opcional: para mostrar el formulario DENTRO de la página, pega aquí el enlace "src"
+    // del código de inserción (Google Forms → Enviar → <>). Termina en "viewform?embedded=true".
+    formEmbedUrl: ""
   };
 
   /* =====================================================================
@@ -430,7 +508,7 @@
      ===================================================================== */
   const I18N = {
     es: {
-      navProgram: "Programa", navRoles: "Roles", navProcess: "Proceso", navFaq: "Preguntas", navApply: "Aplicar",
+      navProgram: "Programa", navGallery: "Galería", navRoles: "Roles", navProcess: "Proceso", navFaq: "Preguntas", navApply: "Aplicar",
       eyebrow: "Guatemala · Voluntariado médico pediátrico",
       h1a: "Cada niño merece", h1b: "un médico que llegue.",
       lead: "Únete a nuestras jornadas médicas para niños en comunidades rurales de Guatemala. Profesionales de la salud y voluntarios sin formación médica: todos tienen un lugar en el equipo.",
@@ -449,7 +527,7 @@
       r5t: "Intérpretes", r5d: "Puente entre el equipo y las familias (español ↔ inglés / portugués).",
       r6t: "Logística y educación", r6d: "Registro de pacientes, montaje, actividades lúdicas y charlas de salud para niños.",
       procEyebrow: "El proceso", procTitle: "De tu ciudad a la comunidad, en 4 pasos",
-      p1t: "Aplica", p1d: "Llena el formulario de esta página. Toma menos de 5 minutos.",
+      p1t: "Aplica", p1d: "Llena el formulario de solicitud. Toma menos de 5 minutos.",
       p2t: "Entrevista", p2d: "Una videollamada para conocer tu experiencia, disponibilidad y el rol ideal para ti.",
       p3t: "Preparación", p3d: "Orientación en línea, guía de viaje y seguridad, y lista de documentos necesarios.",
       p4t: "¡A Guatemala!", p4d: "Te recibimos en el punto de encuentro y viajamos juntos como equipo a la comunidad.",
@@ -466,12 +544,14 @@
       applyEyebrow: "Únete", applyTitle: "Tu tiempo puede cambiar una infancia", applyText: "Cuéntanos sobre ti y te contactaremos con las próximas fechas de jornada.",
       nextLabel: "Próxima jornada:",
       fName: "Nombre completo", fEmail: "Correo electrónico", fCountry: "País", fRole: "Rol de interés",
-      fMsg: "Cuéntanos tu experiencia y disponibilidad", fSend: "Enviar solicitud", fNote: "Al enviar se abrirá tu aplicación de correo con la solicitud lista.",
+      fMsg: "Cuéntanos tu experiencia y disponibilidad", fSend: "Abrir formulario", fNote: "Se abre en Google Forms, en una pestaña nueva.", gfTitle: "Formulario de solicitud", gfText: "Completa tus datos, el rol que te interesa y tu disponibilidad. Toma menos de 5 minutos.",
       fErr: "Por favor escribe tu nombre y un correo válido.", subject: "Solicitud de voluntariado",
-      roleOther: "Aún no lo sé", footer: "Hecho con cariño en Guatemala 🇬🇹"
+      roleOther: "Aún no lo sé",
+      galEyebrow: "En imágenes", galTitle: "Así se vive una jornada", galText: "Fotos reales de nuestras jornadas en comunidades de Guatemala.",
+      g1: "Consulta, medicina… y un juguete", g2: "Toda la comunidad llega a la jornada", g3: "Preparando medicamentos y suplementos", g4: "Farmacia, juguetes y sala de espera"
     },
     en: {
-      navProgram: "Program", navRoles: "Roles", navProcess: "Process", navFaq: "FAQ", navApply: "Apply",
+      navProgram: "Program", navGallery: "Gallery", navRoles: "Roles", navProcess: "Process", navFaq: "FAQ", navApply: "Apply",
       eyebrow: "Guatemala · Pediatric medical volunteering",
       h1a: "Every child deserves", h1b: "a doctor who shows up.",
       lead: "Join our medical missions for children in rural communities across Guatemala. Healthcare professionals and non-medical volunteers alike — there's a place for you on the team.",
@@ -490,7 +570,7 @@
       r5t: "Interpreters", r5d: "The bridge between the team and families (Spanish ↔ English / Portuguese).",
       r6t: "Logistics & education", r6d: "Patient registration, setup, play activities and health talks for kids.",
       procEyebrow: "The process", procTitle: "From your city to the community in 4 steps",
-      p1t: "Apply", p1d: "Fill out the form on this page. It takes less than 5 minutes.",
+      p1t: "Apply", p1d: "Fill out the application form. It takes less than 5 minutes.",
       p2t: "Interview", p2d: "A video call to learn about your experience, availability and the right role for you.",
       p3t: "Prepare", p3d: "Online orientation, travel and safety guide, and a checklist of required documents.",
       p4t: "Off to Guatemala!", p4d: "We meet you at the meeting point and travel together as a team to the community.",
@@ -507,12 +587,14 @@
       applyEyebrow: "Join us", applyTitle: "Your time can change a childhood", applyText: "Tell us about yourself and we'll reach out with upcoming mission dates.",
       nextLabel: "Next mission:",
       fName: "Full name", fEmail: "Email", fCountry: "Country", fRole: "Role of interest",
-      fMsg: "Tell us about your experience and availability", fSend: "Send application", fNote: "Submitting opens your email app with the application ready to send.",
+      fMsg: "Tell us about your experience and availability", fSend: "Open application form", fNote: "Opens in Google Forms in a new tab.", gfTitle: "Application form", gfText: "Share your details, the role you're interested in and your availability. It takes less than 5 minutes.",
       fErr: "Please enter your name and a valid email.", subject: "Volunteer application",
-      roleOther: "Not sure yet", footer: "Made with love in Guatemala 🇬🇹"
+      roleOther: "Not sure yet",
+      galEyebrow: "In pictures", galTitle: "What a mission day looks like", galText: "Real photos from our missions in Guatemalan communities.",
+      g1: "A checkup, medicine… and a toy", g2: "The whole community shows up", g3: "Sorting medicine and supplements", g4: "Pharmacy, toys and the waiting area"
     },
     pt: {
-      navProgram: "Programa", navRoles: "Funções", navProcess: "Processo", navFaq: "Perguntas", navApply: "Inscrever-se",
+      navProgram: "Programa", navGallery: "Galeria", navRoles: "Funções", navProcess: "Processo", navFaq: "Perguntas", navApply: "Inscrever-se",
       eyebrow: "Guatemala · Voluntariado médico pediátrico",
       h1a: "Toda criança merece", h1b: "um médico que chegue.",
       lead: "Participe das nossas jornadas médicas para crianças em comunidades rurais da Guatemala. Profissionais de saúde e voluntários sem formação médica: todos têm lugar na equipe.",
@@ -531,7 +613,7 @@
       r5t: "Intérpretes", r5d: "A ponte entre a equipe e as famílias (espanhol ↔ inglês / português).",
       r6t: "Logística e educação", r6d: "Registro de pacientes, montagem, atividades lúdicas e palestras de saúde para crianças.",
       procEyebrow: "O processo", procTitle: "Da sua cidade à comunidade, em 4 passos",
-      p1t: "Inscreva-se", p1d: "Preencha o formulário desta página. Leva menos de 5 minutos.",
+      p1t: "Inscreva-se", p1d: "Preencha o formulário de inscrição. Leva menos de 5 minutos.",
       p2t: "Entrevista", p2d: "Uma videochamada para conhecer sua experiência, disponibilidade e a função ideal para você.",
       p3t: "Preparação", p3d: "Orientação online, guia de viagem e segurança, e lista de documentos necessários.",
       p4t: "Rumo à Guatemala!", p4d: "Recebemos você no ponto de encontro e seguimos juntos, como equipe, até a comunidade.",
@@ -548,9 +630,11 @@
       applyEyebrow: "Junte-se a nós", applyTitle: "Seu tempo pode mudar uma infância", applyText: "Conte-nos sobre você e entraremos em contato com as próximas datas de jornada.",
       nextLabel: "Próxima jornada:",
       fName: "Nome completo", fEmail: "E-mail", fCountry: "País", fRole: "Função de interesse",
-      fMsg: "Conte-nos sua experiência e disponibilidade", fSend: "Enviar inscrição", fNote: "Ao enviar, seu aplicativo de e-mail será aberto com a inscrição pronta.",
+      fMsg: "Conte-nos sua experiência e disponibilidade", fSend: "Abrir formulário", fNote: "Abre no Google Forms, em uma nova aba.", gfTitle: "Formulário de inscrição", gfText: "Preencha seus dados, a função de interesse e sua disponibilidade. Leva menos de 5 minutos.",
       fErr: "Por favor, escreva seu nome e um e-mail válido.", subject: "Inscrição de voluntariado",
-      roleOther: "Ainda não sei", footer: "Feito com carinho na Guatemala 🇬🇹"
+      roleOther: "Ainda não sei",
+      galEyebrow: "Em imagens", galTitle: "Assim é uma jornada", galText: "Fotos reais das nossas jornadas em comunidades da Guatemala.",
+      g1: "Consulta, remédio… e um brinquedo", g2: "A comunidade inteira participa", g3: "Organizando remédios e suplementos", g4: "Farmácia, brinquedos e sala de espera"
     }
   };
 
@@ -567,11 +651,8 @@
     const t = I18N[lang];
     document.documentElement.lang = lang;
     $$("[data-i18n]").forEach(el => { const k = el.dataset.i18n; if (t[k] != null) el.textContent = t[k]; });
+    $$("[data-i18n-alt]").forEach(el => { el.alt = t[el.dataset.i18nAlt] || ""; });
     $$("[data-cfg]").forEach(el => { el.textContent = cfgVal(CONFIG[el.dataset.cfg]); });
-    $$("[data-cfg-href]").forEach(el => { el.href = "mailto:" + CONFIG.email; });
-    // Opciones de rol según idioma
-    const roles = ["r1t","r2t","r3t","r4t","r5t","r6t","roleOther"];
-    $("#roleSel").innerHTML = roles.map(k => `<option>${t[k]}</option>`).join("");
     // Re-animar título
     $$(".hero h1 .line > span").forEach(s => { s.style.animation = "none"; s.offsetHeight; s.style.animation = ""; });
     $("#lang").value = lang;
@@ -668,15 +749,26 @@
     resize(); addEventListener("resize", resize); frame();
   })();
 
-  /* Formulario → abre correo (sitio estático, sin servidor) */
-  $("#form").addEventListener("submit", e => {
-    e.preventDefault();
-    const f = new FormData(e.target), t = I18N[lang];
-    const name = (f.get("name") || "").trim(), email = (f.get("email") || "").trim();
-    if (!name || !/^\S+@\S+\.\S+$/.test(email)) { alert(t.fErr); return; }
-    const body = `${t.fName}: ${name}\n${t.fEmail}: ${email}\n${t.fCountry}: ${f.get("country")}\n${t.fRole}: ${f.get("role")}\n\n${f.get("msg")}\n\n— (${lang})`;
-    location.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent(t.subject + " — " + name)}&body=${encodeURIComponent(body)}`;
+  /* Galería: lightbox */
+  const lb = $("#lightbox"), lbImg = $("img", lb), lbCap = $(".lb-cap", lb);
+  function openLb(fig) {
+    const img = $("img", fig);
+    lbImg.src = img.currentSrc || img.src; lbImg.alt = img.alt; lbCap.textContent = img.alt;
+    lb.classList.add("open"); lb.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden";
+  }
+  function closeLb() { lb.classList.remove("open"); lb.setAttribute("aria-hidden", "true"); document.body.style.overflow = ""; }
+  $$(".shot").forEach(f => {
+    f.addEventListener("click", () => openLb(f));
+    f.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLb(f); } });
   });
+  lb.addEventListener("click", e => { if (e.target !== lbImg) closeLb(); });
+  addEventListener("keydown", e => { if (e.key === "Escape") closeLb(); });
+
+  /* Formulario de solicitud → Google Forms */
+  $("#gfBtn").href = CONFIG.formUrl;
+  if (CONFIG.formEmbedUrl) {
+    $("#gfEmbed").innerHTML = `<iframe src="${CONFIG.formEmbedUrl}" loading="lazy" title="Google Form">…</iframe>`;
+  }
   </script>
 </body>
 </html>
